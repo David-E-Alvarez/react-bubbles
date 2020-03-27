@@ -10,7 +10,7 @@ const initialColor = {
   id: ""
 };
 
-const ColorList = ({ colors, updateColors }) => {
+const ColorList = ({ colors, updateColors, getData }) => {
   console.log("colors in ColorList.js:", colors);
   // console.log("updateColors in ColorList.js", updateColors);
   const [editing, setEditing] = useState(false);
@@ -22,12 +22,26 @@ const ColorList = ({ colors, updateColors }) => {
     setColorToEdit(color);
   };
 
+  useEffect(() => {
+    const colorToUpdate = colors.find(e => `${e.id}` === colorToEdit.id);
+    if(colorToUpdate){
+        setColorToEdit(colorToUpdate);
+    }
+}, [colors, colorToEdit.id]);
   
   const saveEdit = e => {
     e.preventDefault();
     // Make a put request to save your updated color
     // think about where will you get the id from...
     // where is id saved right now?
+    axiosWithAuth()
+      .put(`http://localhost:5000/api/colors/${colorToEdit.id}`, colorToEdit)
+      .then(res => {
+        console.log("saveEdit: ", res.data)
+        getData()
+        setColorToEdit(initialColor)
+      })
+      .catch(err => console.log(err));
     
   };
 
@@ -37,7 +51,7 @@ const ColorList = ({ colors, updateColors }) => {
       .delete(`http://localhost:5000/api/colors/${color.id}`)
       .then(res => {
         console.log("res: ", res)
-        push('/');
+        getData();
       })
       .catch(err => console.log(err.response));
   };
