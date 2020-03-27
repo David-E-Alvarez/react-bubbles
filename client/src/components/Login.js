@@ -10,17 +10,14 @@ const Login = (props) => {
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
   axiosWithAuth()
-            .post("/api/login", credentials)
-            .then(res => {
-                console.log("res.data.token: ", res.data.payload);
-                console.log("res: ", res)
-                localStorage.setItem('token', res.data.payload);
-                // if(token){
-                //     setLogin(true);
-                // }
-                props.history.push('/bubbles');
-              })
-              .catch(err => console.log(err.response));
+    .post("/api/login", credentials)
+    .then(res => {
+      console.log("res.data.token: ", res.data.payload);
+      console.log("res: ", res)
+      localStorage.setItem('token', res.data.payload);
+      props.history.push('/bubbles');
+    })
+    .catch(err => console.log(err.response));
 
 
   return (
